@@ -2,6 +2,27 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+
+export type Loan = {
+    asset_id: string,
+    asset_type: string,
+    serial_number: string,
+    staff_name: string,
+    staff_dept: string,
+    loan_status: string,
+    status_date: string,
+}
+
+export type LatestLoan = {
+    asset_id: string,
+    asset_type: string,
+    serial_number: string,
+    staff_name: string,
+    staff_dept: string,
+    loan_status: string,
+    status_date: string,
+}
+
 export type User = {
   id: string;
   name: string;

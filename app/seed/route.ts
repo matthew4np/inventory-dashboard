@@ -1,8 +1,37 @@
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { loan, invoices, customers, revenue, users } from '../lib/placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
+async function seedLoan() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS loan (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      asset_id VARCHAR(255) NOT NULL,
+      asset_type VARCHAR(255) NOT NULL,
+      serial_number VARCHAR(255) NOT NULL,
+      staff_name VARCHAR(255) NOT NULL,
+      staff_dept VARCHAR(255) NOT NULL,
+      loan_status VARCHAR(255) NOT NULL,
+      status_date DATE NOT NULL
+    );
+  `;
+
+  const insertedLoan = await Promise.all(
+    loan.map(
+      (loan) => sql`
+        INSERT INTO loan (asset_id, asset_type, serial_number, staff_name, staff_dept, loan_status, status_date)
+        VALUES (${loan.asset_id}, ${loan.asset_type}, ${loan.serial_number}, ${loan.staff_name}, ${loan.staff_dept}, ${loan.loan_status}, ${loan.status_date})
+        ON CONFLICT (id) DO NOTHING;
+      `,
+    ),
+  );
+
+  return insertedLoan;
+}
 
 async function seedUsers() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -104,6 +133,7 @@ async function seedRevenue() {
 export async function GET() {
   try {
     const result = await sql.begin((sql) => [
+      seedLoan(),
       seedUsers(),
       seedCustomers(),
       seedInvoices(),

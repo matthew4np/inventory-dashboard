@@ -2,26 +2,26 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
-import { LatestInvoice } from '@/app/lib/definitions';
+import { LatestLoan } from '@/app/lib/definitions';
 
-export default async function LatestInvoices({
-  latestInvoices,
+export default async function LatestLoans({
+  latestLoans,
 }: {
-  latestInvoices: LatestInvoice[];
+  latestLoans: LatestLoan[];
 }) {
   return (
     <div className="flex w-full flex-col md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Latest Invoices
+        Latest Loan
       </h2>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
         {/* NOTE: Uncomment this code in Chapter 7 */}
 
         <div className="bg-white px-6">
-          {latestInvoices.map((invoice, i) => {
+          {latestLoans.map((loan, i) => {
             return (
               <div
-                key={invoice.id}
+                key={loan.asset_id}
                 className={clsx(
                   'flex flex-row items-center justify-between py-4',
                   {
@@ -30,26 +30,26 @@ export default async function LatestInvoices({
                 )}
               >
                 <div className="flex items-center">
-                  <Image
-                    src={invoice.image_url}
-                    alt={`${invoice.name}'s profile picture`}
+                  {/* <Image
+                    src={loan.image_url}
+                    alt={`${loan.staff_name}'s profile picture`}
                     className="mr-4 rounded-full"
                     width={32}
                     height={32}
-                  />
+                  /> */}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
-                      {invoice.name}
+                      {loan.staff_name}
                     </p>
                     <p className="hidden text-sm text-gray-500 sm:block">
-                      {invoice.email}
+                      {loan.staff_dept}
                     </p>
                   </div>
                 </div>
                 <p
                   className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amount}
+                  {loan.asset_type}
                 </p>
               </div>
             );

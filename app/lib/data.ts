@@ -5,6 +5,7 @@ import {
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
+  LatestLoan,
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
@@ -50,11 +51,27 @@ export async function fetchLatestInvoices() {
   }
 }
 
+export async function fetchLatestLoans() {
+  try {
+    const latestLoan = await sql<LatestLoan[]>`
+      SELECT Loan.asset_id, Loan.asset_type, Loan.serial_number, Loan.staff_name, Loan.staff_dept,
+      Loan.loan_status, Loan.status_date FROM Loan
+      ORDER BY Loan.status_date DESC
+      LIMIT 5`;
+
+    return latestLoan;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest loan.');
+  }
+}
+
 export async function fetchCardData() {
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
+    const loanCountPromise = sql`SELECT COUNT(*) FROM loan`;
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
@@ -63,17 +80,20 @@ export async function fetchCardData() {
          FROM invoices`;
 
     const data = await Promise.all([
+      loanCountPromise,
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0][0].count ?? '0');
-    const numberOfCustomers = Number(data[1][0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
+    const numberOfLoans = Number(data[0][0].count ?? '0');
+    const numberOfInvoices = Number(data[1][0].count ?? '0');
+    const numberOfCustomers = Number(data[2][0].count ?? '0');
+    const totalPaidInvoices = formatCurrency(data[3][0].paid ?? '0');
+    const totalPendingInvoices = formatCurrency(data[3][0].pending ?? '0');
 
     return {
+      numberOfLoans,
       numberOfCustomers,
       numberOfInvoices,
       totalPaidInvoices,
@@ -86,6 +106,7 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
+
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,

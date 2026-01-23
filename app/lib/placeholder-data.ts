@@ -1,5 +1,18 @@
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
+
+const loan = [
+  {
+    asset_id: 'Laptop123',
+    asset_type: 'Laptop',
+    serial_number: 'ABC123',
+    staff_name: 'Staff Name 1',
+    staff_dept: 'IT',
+    loan_status: 'Checked Out',
+    status_date: '2026-01-01',
+  }
+]
+
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
@@ -144,4 +157,4 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
-export { users, customers, invoices, revenue };
+export { loan, users, customers, invoices, revenue };
