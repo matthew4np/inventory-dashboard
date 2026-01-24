@@ -96,6 +96,11 @@ export type FormattedCustomersTable = {
   total_paid: string;
 };
 
+export type Loanfield = {
+    asset_id: string,
+    asset_type: string,
+}
+
 export type CustomerField = {
   id: string;
   name: string;

@@ -1,4 +1,4 @@
-import { CustomerField } from '@/app/lib/definitions';
+import { Loanfield } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   CheckIcon,
@@ -7,30 +7,30 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createInvoice } from '@/app/lib/actions';
+import { createLoan } from '@/app/lib/actions';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
+export default function Form({ loans }: { loans: Loanfield[] }) {
   return (
-    <form action={createInvoice}>
+    <form action={createLoan}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {/* Loan Name */}
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+          <label htmlFor="loan" className="mb-2 block text-sm font-medium">
+            Choose loan
           </label>
           <div className="relative">
             <select
-              id="customer"
-              name="customerId"
+              id="loan"
+              name="loanId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
             >
               <option value="" disabled>
-                Select a customer
+                Select a loan
               </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {loans.map((loan) => (
+                <option key={loan.asset_id} value={loan.asset_id}>
+                  {loan.asset_id}
                 </option>
               ))}
             </select>
@@ -58,10 +58,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
           </div>
         </div>
 
-        {/* Invoice Status */}
+        {/* Loan Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
-            Set the invoice status
+            Set the loan status
           </legend>
           <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
             <div className="flex gap-4">
@@ -101,12 +101,12 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/loans"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit">Create Invoice</Button>
+        <Button type="submit">Create Loan</Button>
       </div>
     </form>
   );
