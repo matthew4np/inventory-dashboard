@@ -28,6 +28,7 @@ const LoanFormSchema = z.object({
 const CreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
 
 export async function createInvoice(formData: FormData) {
+  console.log(formData);
   const { customerId, amount, status } = CreateInvoice.parse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -46,6 +47,7 @@ export async function createInvoice(formData: FormData) {
 }
 
 export async function createLoan(formData: FormData) {
+  console.log(formData);
   const {
     asset_id,
     asset_type,
@@ -66,7 +68,7 @@ export async function createLoan(formData: FormData) {
   const date = new Date().toISOString().split('T')[0];
 
   await sql`
-    INSERT INTO loans (
+    INSERT INTO loan (
       asset_id,
       asset_type,
       serial_number,
@@ -86,6 +88,6 @@ export async function createLoan(formData: FormData) {
     )
   `;
 
-    revalidatePath('/dashboard/invoices');
-    redirect('/dashboard/invoices');
+    revalidatePath('/dashboard/loans');
+    redirect('/dashboard/loans');
 }

@@ -86,6 +86,16 @@ export type CustomersTableType = {
   total_paid: number;
 };
 
+export type LoansTable = {
+    asset_id: string,
+    asset_type: string,
+    serial_number: string,
+    staff_name: string,
+    staff_dept: string,
+    loan_status: string,
+    status_date: string,
+};
+
 export type FormattedCustomersTable = {
   id: string;
   name: string;

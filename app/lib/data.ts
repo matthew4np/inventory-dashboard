@@ -2,6 +2,7 @@ import postgres from 'postgres';
 import {
   CustomerField,
   CustomersTableType,
+  LoansTable,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -142,6 +143,50 @@ export async function fetchFilteredInvoices(
   }
 }
 
+export async function fetchFilteredLoans(
+  query: string,
+  currentPage: number,
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const loans = await sql<LoansTable[]>`
+      SELECT
+        asset_id,
+        asset_type,
+        serial_number,
+        staff_name,
+        staff_dept,
+        loan_status,
+        status_date
+      FROM loan
+      WHERE
+         asset_id ILIKE ${`%${query}%`} OR
+         asset_type ILIKE ${`%${query}%`} OR
+         serial_number ILIKE ${`%${query}%`} OR
+         staff_name ILIKE ${`%${query}%`} OR
+         staff_dept ILIKE ${`%${query}%`} OR
+         loan_status ILIKE ${`%${query}%`}
+      ORDER BY status_date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return loans;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch loans.');
+  }
+}
+
+      // WHERE
+      //   asset_id ILIKE ${`%${query}%`} OR
+      //   asset_type ILIKE ${`%${query}%`} OR
+      //   serial_number ILIKE ${`%${query}%`} OR
+      //   staff_name ILIKE ${`%${query}%`} OR
+      //   staff_dept ILIKE ${`%${query}%`} OR
+      //   loan_status ILIKE ${`%${query}%`} OR
+      //   status_date ILIKE ${`%${query}%`}
+
 export async function fetchInvoicesPages(query: string) {
   try {
     const data = await sql`SELECT COUNT(*)
@@ -160,6 +205,25 @@ export async function fetchInvoicesPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
+  }
+}
+
+export async function fetchLoansPages(query: string) {
+  try {
+    const data = await sql`SELECT COUNT(*)
+    FROM loan
+    WHERE
+      loan.asset_id ILIKE ${`%${query}%`} OR
+      loan.serial_number ILIKE ${`%${query}%`} OR
+      loan.staff_name ILIKE ${`%${query}%`} OR
+      loan.staff_dept ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of loans.');
   }
 }
 
@@ -237,3 +301,4 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error('Failed to fetch customer table.');
   }
 }
+

@@ -13,51 +13,121 @@ export default function Form({ loans }: { loans: Loanfield[] }) {
   return (
     <form action={createLoan}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Loan Name */}
-        <div className="mb-4">
-          <label htmlFor="loan" className="mb-2 block text-sm font-medium">
-            Choose loan
-          </label>
-          <div className="relative">
-            <select
-              id="loan"
-              name="loanId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select a loan
-              </option>
-              {loans.map((loan) => (
-                <option key={loan.asset_id} value={loan.asset_id}>
-                  {loan.asset_id}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-        </div>
 
-        {/* Invoice Amount */}
+        {/* Asset ID*/}
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-            Choose an amount
+          <label htmlFor="asset_id" className="mb-2 block text-sm font-medium">
+            Choose an Asset ID
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="amount"
-                name="amount"
-                type="number"
+                id="asset_id"
+                name="asset_id"
+                type="string"
                 step="0.01"
-                placeholder="Enter USD amount"
+                placeholder="Enter Asset ID"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
 
+        {/* Asset Type*/}
+        <div className="mb-4">
+          <label htmlFor="asset_type" className="mb-2 block text-sm font-medium">
+            Choose an Asset Type
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="asset_type"
+                name="asset_type"
+                type="string"
+                step="0.01"
+                placeholder="Enter Asset Type"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Serial Number */}
+        <div className="mb-4">
+          <label htmlFor="serial_number" className="mb-2 block text-sm font-medium">
+            Input the Serial Number
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="serial_number"
+                name="serial_number"
+                type="string"
+                step="0.01"
+                placeholder="Enter Serial Number"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Staff Name */}
+        <div className="mb-4">
+          <label htmlFor="staff_name" className="mb-2 block text-sm font-medium">
+            Input the Staff Name
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="staff_name"
+                name="staff_name"
+                type="string"
+                step="0.01"
+                placeholder="Enter Staff Name"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+        </div>
+
+       {/* Staff Department */}
+        <div className="mb-4">
+          <label htmlFor="staff_dept" className="mb-2 block text-sm font-medium">
+            Input the Staff Department
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="staff_dept"
+                name="staff_dept"
+                type="string"
+                step="0.01"
+                placeholder="Enter Staff Department"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+        </div>
+
+       {/* Status Date */}
+        <div className="mb-4">
+          <label htmlFor="status_date" className="mb-2 block text-sm font-medium">
+            Input the Status Date
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="status_date"
+                name="status_date"
+                type="string"
+                step="0.01"
+                placeholder="Enter Status Date"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+        </div>
+        
         {/* Loan Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
@@ -67,37 +137,41 @@ export default function Form({ loans }: { loans: Loanfield[] }) {
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
-                  id="pending"
-                  name="status"
+                  id="loan_status"
+                  name="loan_status"
                   type="radio"
-                  value="pending"
+                  value="Checked In"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
-                  htmlFor="pending"
+                  htmlFor="loan_status"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Pending <ClockIcon className="h-4 w-4" />
+                  Checked In <ClockIcon className="h-4 w-4" />
                 </label>
               </div>
               <div className="flex items-center">
                 <input
-                  id="paid"
-                  name="status"
+                  id="loan_status"
+                  name="loan_status"
                   type="radio"
-                  value="paid"
+                  value="Checked Out"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
-                  htmlFor="paid"
+                  htmlFor="loan_status"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
-                  Paid <CheckIcon className="h-4 w-4" />
+                  Checked-Out <CheckIcon className="h-4 w-4" />
                 </label>
               </div>
             </div>
           </div>
         </fieldset>
+
+
+
+
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
