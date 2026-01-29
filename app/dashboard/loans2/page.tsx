@@ -1,11 +1,11 @@
 import Pagination from '@/app/ui/loans/pagination';
 import Search from '@/app/ui/search';
-import LoansTable from '@/app/ui/loans/table';
-import { CreateLoan } from '@/app/ui/loans/buttons';
+import LoansTable from '@/app/ui/loans2/table';
+import { CreateLoan } from '@/app/ui/loans2/buttons';
 import { lusitana } from '@/app/ui/fonts';
-import { LoansTableSkeleton } from '@/app/ui/loansskeletons';
+import { LoansTableSkeleton } from '@/app/ui/loans2skeletons';
 import { Suspense } from 'react';
-import { fetchLoansPages } from '@/app/lib/loandata';
+import { fetchLoansPages } from '@/app/lib/loan2data';
  
 export default async function Page(props: {
   searchParams?: Promise<{
