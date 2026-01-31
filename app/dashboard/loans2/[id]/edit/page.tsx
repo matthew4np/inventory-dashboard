@@ -1,6 +1,7 @@
 import Form from '@/app/ui/loans2/edit-form';
-import Breadcrumbs from '@/app/ui/loans/breadcrumbs';
+import Breadcrumbs from '@/app/ui/loans2/breadcrumbs';
 import { fetchLoanById, fetchStaff, fetchAssets } from '@/app/lib/loan2data';
+import { notFound } from 'next/navigation';
  
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -11,6 +12,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   fetchStaff(),
   fetchAssets(),
   ]);
+
+    if (!loan) {
+    notFound();
+  }
 
   return (
     <main>

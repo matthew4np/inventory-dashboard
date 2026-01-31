@@ -33,17 +33,18 @@ export async function fetchRevenue() {
 
 export async function fetchLatestLoans() {
   try {
-    const data = await sql<LatestLoan[]>`
-      SELECT loans.status, staff.name, staff.dept, staff.email, loan.id
+    const loan = await sql<LatestLoan[]>`
+      SELECT staff.name, assets.model, loans.status
       FROM loans
-      JOIN staff ON loans.staff_id = staff.id
+      INNER JOIN staff ON loans.staff_id = staff.id
+      INNER JOIN assets ON loans.asset_id = assets.id
       ORDER BY loans.date DESC
       LIMIT 5`;
 
-    return data;
+    return loan;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
+    throw new Error('Failed to fetch the latest loans.');
   }
 }
 
@@ -52,7 +53,7 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const loanCountPromise = sql`SELECT COUNT(*) FROM loan`;
+    const loanCountPromise = sql`SELECT COUNT(*) FROM loans`;
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
@@ -178,7 +179,7 @@ export async function fetchStaff() {
     return staff;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    throw new Error('Failed to fetch all staff.');
   }
 }
 
@@ -197,7 +198,7 @@ export async function fetchAssets() {
     return assets;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    throw new Error('Failed to fetch all assets.');
   }
 }
 

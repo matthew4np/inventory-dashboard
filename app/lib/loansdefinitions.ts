@@ -3,22 +3,20 @@
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 
-// export type Loan = {
-//     asset_id: string,
-//     asset_type: string,
-//     serial_number: string,
-//     staff_name: string,
-//     staff_dept: string,
-//     loan_status: string,
-//     status_date: string,
-// }
+
+export type Loan = {
+  id: string;
+  staff_id: string;
+  asset_id: string;
+  status: 'Checked In' | 'Checked Out';
+  date: string;
+}
 
 export type LatestLoan = {
-    status: string,
-    name: string,
-    dept: string,
-    email: string,
     id: string,
+    name: string,
+    model: string,
+    status: string,
 }
 
 export type User = {
@@ -98,5 +96,5 @@ export type LoanForm = {
   id: string,
   staff_id: string,
   asset_id: string,
-  status: string
+  status: string,
 };

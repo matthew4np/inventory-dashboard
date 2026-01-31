@@ -9,13 +9,29 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 const LoanFormSchema = z.object({
   id: z.string(),
-  staff_id: z.string(),
-  asset_id: z.string(),
-  status: z.string(),
+  staff_id: z.string({
+    invalid_type_error: 'Please select a staff.',
+  }),
+  asset_id: z.string({
+    invalid_type_error: 'Please select a asset.',
+  }),
+  status: z.enum(['Checked in', 'Checked out'], {
+    invalid_type_error: 'Please select an status.',
+  }),
   date: z.date()
 });
 
+const CreateLoan = LoanFormSchema.omit({ id: true, date: true });
 const UpdateLoan = LoanFormSchema.omit({ id: true, date: true });
+
+export type State = {
+  errors?: {
+    staff_id?: string[];
+    asset_id?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
 
 export async function updateLoan(id: string, formData: FormData) {
   const { staff_id, asset_id, status } = UpdateLoan.parse({
@@ -24,49 +40,65 @@ export async function updateLoan(id: string, formData: FormData) {
     status: formData.get('status'),
   });
  
- 
-  await sql`
-    UPDATE loans
-    SET staff_id = ${staff_id}, asset_id = ${asset_id}, status = ${status}
-    WHERE id = ${id}
-  `;
- 
-  revalidatePath('/dashboard/loans2');
-  redirect('/dashboard/loans2');
-}
+try { 
+    await sql`
+      UPDATE loans
+      SET staff_id = ${staff_id}, asset_id = ${asset_id}, status = ${status}
+      WHERE id = ${id}
+    `;
+} catch (error) {
+  console.error(error);
 
-export async function createLoan(formData: FormData) {
-  const {
-    staff_id,
-    asset_id,
-    status,
-  } = LoanFormSchema.parse({
+}
+    revalidatePath('/dashboard/loans2');
+    redirect('/dashboard/loans2');
+};
+
+export async function createLoan(prevState: State, formData: FormData) {
+
+const validatedFields = CreateLoan.safeParse({
     staff_id: formData.get('staff_id'),
     asset_id: formData.get('asset_id'),
-    status: formData.get('status')
+    status: formData.get('status'),
   });
+
+if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Loan.',
+    };
+  }
+
   const date = new Date().toISOString().split('T')[0];
+  const { staff_id, asset_id, status } = validatedFields.data;
 
-  await sql`
-    INSERT INTO loans (
-      staff_id,
-      asset_id,
-      status,
-      date
-    )
-    VALUES (
-        ${staff_id},
-        ${asset_id},
-        ${status},
-        ${date}
-    )
-  `;
-
+try {
+    await sql`
+      INSERT INTO loans (
+        staff_id,
+        asset_id,
+        status,
+        date
+      )
+      VALUES (
+          ${staff_id},
+          ${asset_id},
+          ${status},
+          ${date}
+      )
+    `;
+} catch (error) {
+  console.error(error);
+  return {
+    message: 'Database Error: Failed to Create Loan.'
+  }
+}
     revalidatePath('/dashboard/loans2');
     redirect('/dashboard/loans2');
 }
 
 export async function deleteLoan(id: string) {
+
   await sql`DELETE FROM loans WHERE id = ${id}`;
   revalidatePath('/dashboard/loans2');
 }

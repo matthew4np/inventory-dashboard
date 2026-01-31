@@ -1,4 +1,4 @@
-import Pagination from '@/app/ui/loans/pagination';
+import Pagination from '@/app/ui/loans2/pagination';
 import Search from '@/app/ui/search';
 import LoansTable from '@/app/ui/loans2/table';
 import { CreateLoan } from '@/app/ui/loans2/buttons';
