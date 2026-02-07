@@ -1,4 +1,4 @@
-import { Card } from '@/app/ui/dashboard/cards';
+import { Card } from '@/app/ui/dashboard/cardsloan';
 // import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 // import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 import LatestLoans from '@/app/ui/dashboard/latest-loan';
@@ -6,7 +6,7 @@ import { lusitana } from '@/app/ui/fonts';
 import { fetchLatestLoans } from '@/app/lib/loan2data';
 import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestLoansSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
-import CardWrapper from '@/app/ui/dashboard/cards';
+import CardWrapper from '@/app/ui/dashboard/cardsloan';
 
 export default async function Page() {
   const latestLoans = await fetchLatestLoans();

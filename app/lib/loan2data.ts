@@ -34,7 +34,7 @@ export async function fetchRevenue() {
 export async function fetchLatestLoans() {
   try {
     const loan = await sql<LatestLoan[]>`
-      SELECT staff.name, assets.model, loans.status
+      SELECT staff.id, staff.name, assets.model, loans.status
       FROM loans
       INNER JOIN staff ON loans.staff_id = staff.id
       INNER JOIN assets ON loans.asset_id = assets.id
@@ -48,38 +48,38 @@ export async function fetchLatestLoans() {
   }
 }
 
-export async function fetchCardData() {
+export async function fetchLoanData() {
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
     const loanCountPromise = sql`SELECT COUNT(*) FROM loans`;
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
+    const staffCountPromise = sql`SELECT COUNT(*) FROM staff`;
+    // const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
+    // const invoiceStatusPromise = sql`SELECT
+    //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
+    //      SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
+    //      FROM invoices`;
 
     const data = await Promise.all([
       loanCountPromise,
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
+      staffCountPromise,
+      // customerCountPromise,
+      // invoiceStatusPromise,
     ]);
 
-    const numberOfLoans = Number(data[0][0].count ?? '0');
-    const numberOfInvoices = Number(data[1][0].count ?? '0');
-    const numberOfCustomers = Number(data[2][0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[3][0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[3][0].pending ?? '0');
+    const numberOfLoan = Number(data[0][0].count ?? '0');
+    const numberOfStaff = Number(data[1][0].count ?? '0');
+    // const numberOfCustomers = Number(data[2][0].count ?? '0');
+    // const totalPaidInvoices = formatCurrency(data[3][0].paid ?? '0');
+    // const totalPendingInvoices = formatCurrency(data[3][0].pending ?? '0');
 
     return {
-      numberOfLoans,
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
+      numberOfLoan,
+      numberOfStaff,
+      // numberOfInvoices,
+      // totalPaidInvoices,
+      // totalPendingInvoices,
     };
   } catch (error) {
     console.error('Database Error:', error);
