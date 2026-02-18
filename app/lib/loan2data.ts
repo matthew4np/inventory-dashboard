@@ -55,7 +55,11 @@ export async function fetchLoanData() {
     // how to initialize multiple queries in parallel with JS.
     const loanCountPromise = sql`SELECT COUNT(*) FROM loans`;
     const staffCountPromise = sql`SELECT COUNT(*) FROM staff`;
-    // const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
+    const availableAssetCountPromise = sql`SELECT COUNT(*) FROM assets
+                                            WHERE id NOT IN (
+                                            SELECT asset_id from loans
+                                            WHERE loans.status = 'Checked Out'
+                                            )`;
     // const invoiceStatusPromise = sql`SELECT
     //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
     //      SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
@@ -64,20 +68,20 @@ export async function fetchLoanData() {
     const data = await Promise.all([
       loanCountPromise,
       staffCountPromise,
-      // customerCountPromise,
+      availableAssetCountPromise,
       // invoiceStatusPromise,
     ]);
 
     const numberOfLoan = Number(data[0][0].count ?? '0');
     const numberOfStaff = Number(data[1][0].count ?? '0');
-    // const numberOfCustomers = Number(data[2][0].count ?? '0');
+    const numberOfAvailableAsset = Number(data[2][0].count ?? '0');
     // const totalPaidInvoices = formatCurrency(data[3][0].paid ?? '0');
     // const totalPendingInvoices = formatCurrency(data[3][0].pending ?? '0');
 
     return {
       numberOfLoan,
       numberOfStaff,
-      // numberOfInvoices,
+      numberOfAvailableAsset,
       // totalPaidInvoices,
       // totalPendingInvoices,
     };
@@ -186,13 +190,11 @@ export async function fetchStaff() {
 export async function fetchAssets() {
   try {
     const assets = await sql<AssetField[]>`
-      SELECT
-        id,
-        model,
-        brand,
-        serial
-      FROM assets
-      ORDER BY model ASC
+      SELECT * FROM assets
+        WHERE id NOT IN (
+        SELECT asset_id from loans
+        WHERE loans.status = 'Checked Out'
+        )
     `;
 
     return assets;

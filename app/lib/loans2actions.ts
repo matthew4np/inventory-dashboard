@@ -4,8 +4,6 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
-import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
  
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -17,7 +15,7 @@ const LoanFormSchema = z.object({
   asset_id: z.string({
     invalid_type_error: 'Please select a asset.',
   }),
-  status: z.enum(['Checked in', 'Checked out'], {
+  status: z.string({
     invalid_type_error: 'Please select an status.',
   }),
   date: z.date()
@@ -69,8 +67,8 @@ if (!validatedFields.success) {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Loan.',
     };
-  }
-
+  };
+console.log('2');
   const date = new Date().toISOString().split('T')[0];
   const { staff_id, asset_id, status } = validatedFields.data;
 
@@ -90,7 +88,6 @@ try {
       )
     `;
 } catch (error) {
-  console.error(error);
   return {
     message: 'Database Error: Failed to Create Loan.'
   }
@@ -103,24 +100,5 @@ export async function deleteLoan(id: string) {
 
   await sql`DELETE FROM loans WHERE id = ${id}`;
   revalidatePath('/dashboard/loans2');
-}
-
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
-  try {
-    await signIn('credentials', formData);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
-      }
-    }
-    throw error;
-  }
 }
 

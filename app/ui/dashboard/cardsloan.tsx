@@ -18,6 +18,7 @@ export default async function CardWrapper() {
  const {
     numberOfLoan,
     numberOfStaff,
+    numberOfAvailableAsset,
   } = await fetchLoanData();
   return (
     <>
@@ -25,6 +26,7 @@ export default async function CardWrapper() {
 
       <Card title="Total Loan" value={numberOfLoan} type="collected" />
       <Card title="Total Staff" value={numberOfStaff} type="pending" />
+      <Card title="Available Assets" value={numberOfAvailableAsset} type="invoices" />
     </>
   );
 }
@@ -36,7 +38,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'collected' | 'customers' | 'pending' | 'collected';
+  type: 'collected' | 'customers' | 'pending' | 'invoices';
 }) {
   const Icon = iconMap[type];
 
