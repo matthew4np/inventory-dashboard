@@ -1,5 +1,5 @@
 import { render, screen, act } from '@testing-library/react';
-import Page from '../app/dashboard/loans2/page';
+import Page from './app/dashboard/loans2/page';
 import '@testing-library/jest-dom';
 
 // Mock the fetchData function to control test data

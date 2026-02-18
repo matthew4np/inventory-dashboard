@@ -13,6 +13,9 @@ const config = {
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 
+// Tells Jest to only look for tests and files inside these specific folders
+  roots: ['<rootDir>/UnitTesting'],
+
 }
  
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

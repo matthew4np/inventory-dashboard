@@ -39,3 +39,5 @@ jobs:
       run: pnpm install --frozen-lockfile
     # - run: pnpm run build --if-present
     - run: pnpm test
+    - run: pnpm vitest
+    - run: pnpm playwright test
