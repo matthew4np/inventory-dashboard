@@ -43,3 +43,7 @@ jobs:
     - name: Install Playwright Browsers
       run: pnpm playwright install --with-deps
     - run: pnpm playwright test
+      env:
+        # This maps your GitHub Secret to an environment variable
+        DATABASE_URL: ${{ DATABASE_URL=postgresql://neondb_owner:npg_0LtVyYF7eURx@ep-still-night-ahrrt12o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require }}
+        NODE_ENV: test
