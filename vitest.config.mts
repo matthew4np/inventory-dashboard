@@ -9,6 +9,17 @@ export default defineConfig({
     env: {
     POSTGRES_URL: "postgresql://neondb_owner:npg_0LtVyYF7eURx@ep-still-night-ahrrt12o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require"
     },
+
+  server: {
+      deps: {
+        inline: [
+          // This tells Vitest to process these packages as ESM
+          '@exodus/bytes',
+          'html-encoding-sniffer'
+        ]
+      }
+    },
+
     // Sets the project root; all other paths will be relative to this
     root: './', 
     
