@@ -21,7 +21,7 @@ jobs:
     env:
       # Fixes IPv6 vs IPv4 connection issues with Neon/Node 17+
       NODE_OPTIONS: --dns-result-order=ipv4first
-      POSTGRES_URL: ${{ POSTGRES_URL }}
+      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
 
     steps:
     - uses: actions/checkout@v4
@@ -63,4 +63,4 @@ jobs:
       run: |
        pnpm playwright test || (cat server.log && exit 1)
       env:
-       POSTGRES_URL: ${{ POSTGRES_URL }}
+       POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
