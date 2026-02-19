@@ -61,7 +61,6 @@ jobs:
 
     - name: Start Server and Run Tests
       run: |
-       pnpm dev > server.log 2>&1 &
        pnpm exec wait-on http://127.0.0.1:3000 || (cat server.log && exit 1)
        pnpm playwright test
       env:
