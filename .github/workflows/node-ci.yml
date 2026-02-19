@@ -47,8 +47,8 @@ jobs:
     - name: Install Playwright Browsers
       run: pnpm playwright install --with-deps
 
-    - name: Wake up Neon Database
-      run: psql "$DATABASE_URL" -c "SELECT 1;"
+    # - name: Wake up Neon Database
+    #   run: psql "$DATABASE_URL" -c "SELECT 1;"
       # env:
       #   DATABASE_URL: ${{ DATABASE_URL }}
 
