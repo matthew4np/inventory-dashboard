@@ -22,7 +22,7 @@ jobs:
       # Fixes IPv6 vs IPv4 connection issues with Neon/Node 17+
       NODE_OPTIONS: --dns-result-order=ipv4first
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      
+
     steps:
     - uses: actions/checkout@v4
 
@@ -49,11 +49,11 @@ jobs:
 
     - name: Wake up Neon Database
       run: psql "$DATABASE_URL" -c "SELECT 1;"
-      env:
-        DATABASE_URL: ${{ DATABASE_URL }}
+      # env:
+      #   DATABASE_URL: ${{ DATABASE_URL }}
 
     - run: pnpm playwright test
-      env:
-        # This maps your GitHub Secret to an environment variable
-        DATABASE_URL: ${{ DATABASE_URL }}
-        NODE_ENV: test
+      # env:
+      #   # This maps your GitHub Secret to an environment variable
+      #   DATABASE_URL: ${{ DATABASE_URL }}
+      #   NODE_ENV: test
