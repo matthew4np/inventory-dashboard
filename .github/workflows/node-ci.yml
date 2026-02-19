@@ -61,7 +61,7 @@ jobs:
 
     - name: Start Server and Run Tests
       run: |
-       pnpm exec wait-on http://127.0.0.1:3000 || (cat server.log && exit 1)
+       pnpm exec wait-on http://localhost:3000 || (cat server.log && exit 1)
        pnpm playwright test
       env:
        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
