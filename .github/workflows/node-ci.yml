@@ -16,9 +16,13 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    env:
+      # Fixes IPv6 vs IPv4 connection issues with Neon/Node 17+
+      NODE_OPTIONS: --dns-result-order=ipv4first
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
     steps:
     - uses: actions/checkout@v4
 
@@ -46,10 +50,10 @@ jobs:
     - name: Wake up Neon Database
       run: psql "$DATABASE_URL" -c "SELECT 1;"
       env:
-        DATABASE_URL: postgresql://neondb_owner:npg_0LtVyYF7eURx@ep-still-night-ahrrt12o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+        DATABASE_URL: ${{ DATABASE_URL }}
 
     - run: pnpm playwright test
       env:
         # This maps your GitHub Secret to an environment variable
-        DATABASE_URL: postgresql://neondb_owner:npg_0LtVyYF7eURx@ep-still-night-ahrrt12o-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+        DATABASE_URL: ${{ DATABASE_URL }}
         NODE_ENV: test
