@@ -52,9 +52,17 @@ jobs:
       # env:
       #   DATABASE_URL: ${{ DATABASE_URL }}
 
-    - name: Run Playwright Test. Wait on webserver. 
-      run: pnpm exec wait-on http://127.0.0.1:3000/dashboard && pnpm playwright test
+    # - name: Run Playwright Test. Wait on webserver. 
+    #   run: pnpm exec wait-on http://127.0.0.1:3000/dashboard && pnpm playwright test
       # env:
       #   # This maps your GitHub Secret to an environment variable
       #   DATABASE_URL: ${{ DATABASE_URL }}
       #   NODE_ENV: test
+
+    - name: Start Server and Run Tests
+      run: |
+       pnpm dev & 
+       pnpm exec wait-on http://127.0.0.1:3000/dashboard --timeout 60000
+       pnpm playwright test
+      env:
+       DATABASE_URL: ${{ secrets.DATABASE_URL }}
