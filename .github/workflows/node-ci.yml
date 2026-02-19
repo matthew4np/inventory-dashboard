@@ -62,7 +62,7 @@ jobs:
     - name: Start Server and Run Tests
       run: |
        pnpm dev & 
-       pnpm exec wait-on http://localhost:3000/dashboard --timeout 60000
+       pnpm exec wait-on http://localhost:3000/dashboard --timeout 60000 &
        pnpm playwright test
       env:
        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
